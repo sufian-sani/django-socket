@@ -1,0 +1,9 @@
+# VS Code / IDE files
+.vscode/
+.idea/
+
+# Virtual environment
+.env/
+.venv/
+venv/
+ENV/

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ blog.title }}</title>
+</head>
+<body>
+    <h1>{{ blog.title }}</h1>
+    {% comment %} <p>By {{ blog.author.username }} | {{ blog.created_at }} | <button>Message to authon</button>  </p> {% endcomment %}
+    <p>
+        By
+        {% if request.user == blog.author %}
+            My Blog
+        {% else %}
+            {{ blog.author.username }}
+            {% if blog.author.id in online_users %}
+                <span style="color:green;">● Online</span>
+            {% else %}
+                <span style="color:gray;">● Offline</span>
+            {% endif %}
+        {% endif %}
+        | {{ blog.created_at }}
+        {% comment %} | <button onclick="openChat({{ blog.author.id }})">Message Author</button>
+        | Status: <span id="status"></span> {% endcomment %}
+        <button id="msgBtn">Message to author</button>
+    </p>
+    <p>{{ blog.content }}</p>
+    <a href="{% url 'blog_list' %}">Back to Blogs</a>
+
+    {% comment %} <div id="chat-box" style="display:none;">
+        <div id="messages"></div>
+        <input id="msgInput" type="text" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div> {% endcomment %}
+
+    <script>
+        const username = "{{ request.user.username }}";  
+        const author = "{{ blog.author.username }}";
+        const authorId = {{ blog.author.id }};  // numeric
+
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + authorId + "/");
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            alert("Message from " + data.from + ": " + data.message);
+        };
+
+        document.getElementById("msgBtn").onclick = function() {
+            socket.send(JSON.stringify({
+                "to": author,
+                "message": "Hello!"
+            }));
+        };
+    </script>
+
+
+</body>
+
+</html>

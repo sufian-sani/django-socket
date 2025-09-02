@@ -1,0 +1,30 @@
+<h1>All Blogs</h1>
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }} | <a href="{% url 'logout' %}">Logout</a></p>
+{% else %}
+    <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Sign Up</a></p>
+{% endif %}
+
+<hr>
+
+{% for blog in blogs %}
+    <h2><a href="{% url 'blog_detail' blog.pk %}">{{ blog.title }}</a></h2>
+    <p>By {{ blog.author.username }} | {{ blog.created_at }}</p>
+    <p>{{ blog.content|truncatechars:200 }}</p>
+    <hr>
+{% endfor %}
+
+<script>
+    const username = "{{ request.user.username }}";
+    const authorId = {{ blog.author.id }};  // numeric
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + authorId + "/");
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const el = document.getElementById("status-" + data.user);
+        if (el) {
+            el.innerText = data.status === "online" ? "🟢 Online" : "⚪ Offline";
+        }
+    };
+</script>
