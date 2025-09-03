@@ -12,16 +12,11 @@
             My Blog
         {% else %}
             {{ blog.author.username }}
-            {% if blog.author.id in online_users %}
-                <span style="color:green;">● Online</span>
-            {% else %}
-                <span style="color:gray;">● Offline</span>
-            {% endif %}
         {% endif %}
         | {{ blog.created_at }}
         {% comment %} | <button onclick="openChat({{ blog.author.id }})">Message Author</button>
         | Status: <span id="status"></span> {% endcomment %}
-        <button id="msgBtn">Message to author</button>
+        {% comment %} <button id="msgBtn">Message to author</button> {% endcomment %}
     </p>
     <p>{{ blog.content }}</p>
     <a href="{% url 'blog_list' %}">Back to Blogs</a>
@@ -32,7 +27,7 @@
         <button onclick="sendMessage()">Send</button>
     </div> {% endcomment %}
 
-    <script>
+    {% comment %} <script>
         const username = "{{ request.user.username }}";  
         const author = "{{ blog.author.username }}";
         const authorId = {{ blog.author.id }};  // numeric
@@ -50,7 +45,7 @@
                 "message": "Hello!"
             }));
         };
-    </script>
+    </script> {% endcomment %}
 
 
 </body>

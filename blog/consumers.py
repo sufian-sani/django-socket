@@ -1,32 +1,32 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
-import json
+# from channels.generic.websocket import AsyncWebsocketConsumer
+# import json
 
-ONLINE_USERS = set()
+# ONLINE_USERS = set()
 
-class StatusConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.username = self.scope["url_route"]["kwargs"]["username"]
-        ONLINE_USERS.add(self.username)
-        await self.accept()
-        # broadcast to others
-        await self.channel_layer.group_send(
-            "online_group",
-            {"type": "user_status", "user": self.username, "status": "online"}
-        )
+# class StatusConsumer(AsyncWebsocketConsumer):
+#     async def connect(self):
+#         self.username = self.scope["url_route"]["kwargs"]["username"]
+#         ONLINE_USERS.add(self.username)
+#         await self.accept()
+#         # broadcast to others
+#         await self.channel_layer.group_send(
+#             "online_group",
+#             {"type": "user_status", "user": self.username, "status": "online"}
+#         )
 
-    async def disconnect(self, close_code):
-        if self.username in ONLINE_USERS:
-            ONLINE_USERS.remove(self.username)
-        await self.channel_layer.group_send(
-            "online_group",
-            {"type": "user_status", "user": self.username, "status": "offline"}
-        )
+#     async def disconnect(self, close_code):
+#         if self.username in ONLINE_USERS:
+#             ONLINE_USERS.remove(self.username)
+#         await self.channel_layer.group_send(
+#             "online_group",
+#             {"type": "user_status", "user": self.username, "status": "offline"}
+#         )
 
-    async def receive(self, text_data):
-        pass  # not needed for now
+#     async def receive(self, text_data):
+#         pass  # not needed for now
 
-    async def user_status(self, event):
-        await self.send(text_data=json.dumps(event))
+#     async def user_status(self, event):
+#         await self.send(text_data=json.dumps(event))
 
 
 

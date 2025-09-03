@@ -15,7 +15,7 @@
     <hr>
 {% endfor %}
 
-<script>
+{% comment %} <script>
     const username = "{{ request.user.username }}";
     const authorId = {{ blog.author.id }};  // numeric
     const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + authorId + "/");
@@ -27,4 +27,4 @@
             el.innerText = data.status === "online" ? "🟢 Online" : "⚪ Offline";
         }
     };
-</script>
+</script> {% endcomment %}
